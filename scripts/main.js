@@ -35,16 +35,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             document.addEventListener('mousemove', (e) => {
                 if (!isDragging) return;
-                const minWidth = 300;
-                let newWidth = e.clientX;
-                const maxPreviewWidth = splitContainer.offsetWidth - minWidth;
-                
-                if (newWidth < minWidth) newWidth = minWidth;
-                if (newWidth > maxPreviewWidth) newWidth = maxPreviewWidth;
-                
-                // 修正：改變父級面板的寬度
-                editorPanel.style.width = newWidth + 'px';
-                previewPanel.style.width = `calc(100% - ${newWidth}px - ${gutter.offsetWidth}px)`;
+                const container = gutter.parentElement;
+                const editorPanel = container.querySelector('#editor-panel');
+                const previewPanel = container.querySelector('#preview-panel');
+                const containerWidth = container.offsetWidth;
+                const newEditorWidth = (e.clientX - container.offsetLeft) / containerWidth;
+
+                if (newEditorWidth > 0.1 && newEditorWidth < 0.9) {
+                    editorPanel.style.flex = `${newEditorWidth}`;
+                    previewPanel.style.flex = `${1 - newEditorWidth}`;
+                }
             });
 
             document.addEventListener('mouseup', () => {
