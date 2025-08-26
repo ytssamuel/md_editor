@@ -18,6 +18,7 @@ function helloWorld() {
 
 ### 數學公式
 這是著名的質能等價公式： $E = mc^2$
+
 其它數學式:
 $$
 \int_{0}^{\infty} e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
