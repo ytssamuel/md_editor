@@ -1,0 +1,23 @@
+
+
+/
+├── index.html
+├── style.css
+└── scripts/
+    ├── main.js             // 核心程式碼，負責初始化與模組導入
+    ├── uiManager.js        // 處理所有 UI 相關功能 (主題切換、檢視模式)
+    ├── fileHandler.js      // 處理所有檔案操作 (下載、上傳、清除)
+    ├── markdownRenderer.js // 處理 Markdown 渲染與同步
+    └── modalManager.js     // 處理自定義模態框
+
+
+/
+├── index.html
+├── scripts/
+└── styles/
+    ├── main.css          // 主入口，負責引入所有其他樣式
+    ├── variables.css     // 存放顏色、字體等變數
+    ├── base.css          // 存放 HTML 元素基礎樣式 (body, h1, p)
+    ├── components.css    // 存放可重用組件樣式 (按鈕, 模態框)
+    ├── layout.css        // 存放整體佈局樣式 (split-container, gutter)
+    └── markdown.css      // 存放 Markdown 渲染區塊樣式 (#preview)

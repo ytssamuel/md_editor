@@ -1,0 +1,162 @@
+/* 將所有樣式檔案匯總到此處 */
+@import url('variables.css');
+@import url('base.css');
+@import url('components.css');
+@import url('layout.css');
+@import url('markdown.css');
+
+/* 打印樣式 */
+@media print {
+    body, .container {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        background: white;
+        box-shadow: none;
+    }
+
+    /* 調整列印時隱藏的元素 */
+    header, .toolbar, .button-bar-container, .gutter, footer, .line-numbers, .file-input, .nav-sidebar {
+        display: none !important;
+    }
+
+    .split-container, .panel, #preview, .editor-container {
+        display: block;
+        height: auto;
+        width: 100%;
+        overflow: visible;
+        border: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    #editor {
+        display: none !important;
+    }
+
+    #preview {
+        padding: 1.5cm;
+        font-size: 12pt;
+    }
+
+    #preview h1 {
+        font-size: 18pt;
+    }
+
+    #preview h2 {
+        font-size: 16pt;
+    }
+
+    #preview h3 {
+        font-size: 14pt;
+    }
+
+    #preview pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    @page {
+        size: auto;
+        margin: 0;
+    }
+
+    .page-break {
+        page-break-after: always;
+    }
+}
+
+/* 兩種檢視模式的 CSS 樣式 */
+.view-mode-editor-only #preview-panel {
+    display: none;
+}
+.view-mode-editor-only .gutter {
+    display: none;
+}
+.view-mode-editor-only #editor-panel {
+    flex: 1 1 100%;
+}
+
+.view-mode-preview-only #editor-panel {
+    display: none;
+}
+.view-mode-preview-only .gutter {
+    display: none;
+}
+.view-mode-preview-only #preview-panel {
+    flex: 1 1 100%;
+}
+
+/* 調整 .toolbar 為 Flexbox 容器 */
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 10px 15px;
+    background: var(--toolbar-bg);
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap; /* 允許換行以適應小螢幕 */
+}
+
+/* 新增中央按鈕容器的樣式 */
+.central-buttons {
+    display: flex;
+    gap: 10px;
+    flex: 1; /* 讓其佔滿剩餘空間，實現置中 */
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* 新增右側按鈕容器的樣式 */
+.right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 移除按鈕定位，現在由 flexbox 控制 */
+.top-toggle-btn {
+    position: static;
+    background: var(--button-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, background 0.2s ease;
+}
+
+.top-toggle-btn:hover {
+    background: var(--button-hover-bg);
+    transform: scale(1.1);
+}
+
+.top-toggle-btn i {
+    color: var(--highlight-color);
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+/* 標頭區塊的動畫樣式 */
+#main-header {
+    max-height: 200px; /* 預設一個足夠大的高度 */
+    overflow: hidden;
+    transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+}
+
+/* 當 body 加上 .collapsed-header 類別時，標頭收合 */
+.collapsed-header #main-header {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* 當標頭收合時，按鈕的箭頭朝下 */
+.collapsed-header #top-toggle-btn i {
+    transform: rotate(180deg);
+}

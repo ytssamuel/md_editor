@@ -1,0 +1,60 @@
+/* 全局和基礎 HTML 元素樣式 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    padding: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 5px;
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.description {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+    list-style: none;
+}
+
+.feature-tag {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-color);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    border: 1px solid var(--border-color);
+    transition: background-color 0.3s ease;
+}
+
+footer {
+    text-align: center;
+    padding: 15px;
+    color: var(--text-color-light);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border-color);
+    background: var(--header-footer-bg);
+    transition: background 0.3s ease;
+    flex-shrink: 0;
+}

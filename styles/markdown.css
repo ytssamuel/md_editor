@@ -1,0 +1,165 @@
+/* 專門為預覽區塊中的 Markdown 內容設定的樣式 */
+#preview h1 {
+    padding-bottom: 0.3em;
+    margin-bottom: 0.8em;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--accent-color);
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+#preview h2 {
+    padding-bottom: 0.3em;
+    margin-top: 1.8em;
+    margin-bottom: 0.8em;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--accent-color);
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+#preview h3 {
+    color: var(--highlight-color);
+    transition: color 0.3s ease;
+}
+
+#preview p {
+    margin-bottom: 1em;
+}
+
+#preview code {
+    background-color: rgba(92, 99, 112, 0.2);
+    padding: 0.2em 0.4em;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-family: 'Fira Code', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    color: var(--accent-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.light-mode #preview code {
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+#preview pre {
+    background-color: var(--container-bg);
+    padding: 1.2em;
+    overflow: auto;
+    border-radius: 8px;
+    margin-bottom: 1.5em;
+    line-height: 1.45;
+    border: 1px solid var(--border-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+#preview pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    color: var(--text-color);
+}
+
+.light-mode #preview pre code {
+    color: var(--text-color);
+}
+
+#preview blockquote {
+    border-left: 4px solid var(--highlight-color);
+    padding: 0.8em 1em;
+    margin-left: 0;
+    color: var(--text-color-light);
+    background: var(--toolbar-bg);
+    border-radius: 0 6px 6px 0;
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+#preview table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 1.5em;
+    display: block;
+    overflow: auto;
+    background: var(--toolbar-bg);
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+
+#preview table th, #preview table td {
+    border: 1px solid var(--border-color);
+    padding: 0.8em 1em;
+    transition: border-color 0.3s ease;
+}
+
+#preview table th {
+    background-color: var(--bg-color);
+    font-weight: 600;
+    transition: background 0.3s ease;
+}
+
+#preview table tr:nth-child(even) {
+    background-color: var(--panel-bg);
+    transition: background 0.3s ease;
+}
+
+#preview img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+#preview ul, #preview ol {
+    margin-bottom: 1em;
+    padding-left: 2em;
+}
+
+#preview li {
+    margin-bottom: 0.4em;
+}
+
+#preview a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+#preview a:hover {
+    text-decoration: underline;
+}
+
+#preview hr {
+    height: 0.25em;
+    padding: 0;
+    margin: 2em 0;
+    background-color: var(--border-color);
+    border: 0;
+    border-radius: 1px;
+    transition: background 0.3s ease;
+}
+
+.math-block {
+    overflow-x: auto;
+    margin: 1.5em 0;
+    text-align: center;
+}
+
+.mermaid, .abc-notation {
+    margin: 1.5em 0;
+    text-align: center;
+    overflow-x: auto;
+    background-color: var(--panel-bg);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.mermaid-error, .abc-error {
+    background-color: var(--accent-color);
+    color: white;
+    border: 1px solid var(--highlight-color);
+    padding: 15px;
+    margin: 1.5em 0;
+    border-radius: 8px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}

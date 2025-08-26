@@ -1,0 +1,41 @@
+/* 存放所有 CSS 變數 */
+:root {
+    --bg-color: #282c34;
+    --container-bg: #1e2126;
+    --panel-bg: #21252b;
+    --text-color: #abb2bf;
+    --text-color-light: #5c6370;
+    --accent-color: #61afef;
+    --button-bg: #3e4452;
+    --button-hover-bg: #4a5160;
+    --border-color: #3e4452;
+    --highlight-color: #98c379;
+    --toolbar-bg: #21252b;
+    --header-footer-bg: #1e2126;
+    --line-number-bg: #2c313a;
+    --line-number-color: #5c6370;
+    --modal-input-bg: #2c313a;
+    --modal-input-color: #abb2bf;
+    --sidebar-bg: #1b1e22;
+}
+
+/* 淺色主題的 CSS 變數 */
+.light-mode {
+    --bg-color: #f8f9fa;
+    --container-bg: #ffffff;
+    --panel-bg: #f3f4f6;
+    --text-color: #343a40;
+    --text-color-light: #6c757d;
+    --accent-color: #007bff;
+    --button-bg: #e2e6ea;
+    --button-hover-bg: #d4d7db;
+    --border-color: #dee2e6;
+    --highlight-color: #28a745;
+    --toolbar-bg: #e9ecef;
+    --header-footer-bg: #ffffff;
+    --line-number-bg: #e9ecef;
+    --line-number-color: #adb5bd;
+    --modal-input-bg: #e9ecef;
+    --modal-input-color: #343a40;
+    --sidebar-bg: #e9ecef;
+}
