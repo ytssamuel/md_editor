@@ -1,4 +1,4 @@
-# 專業 Markdown 編輯器
+# Markdown 編輯器
 ## 歡迎使用這款強大的工具
 這是一個支援多種進階功能的 Markdown 文件範例。
 ### 功能介紹
@@ -17,16 +17,23 @@ function helloWorld() {
 ```
 
 ### 數學公式
-公式1: $E = mc^2$
-
-公式2:
+這是著名的質能等價公式： $E = mc^2$
+其它數學式:
 $$
 \int_{0}^{\infty} e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
 $$
+$$
+\\int_{-\\infty}^\\infty e^{-x^2}dx = \\sqrt{\\pi}
+$$
+
+\\[
+\\cos^2 \\theta + \\sin^2 \\theta = 1
+\\]
 
 ### Mermaid 圖表
 
  - 系統架構圖 (Architecture Diagram)
+
 ```mermaid
 graph TD
     subgraph View
@@ -74,6 +81,7 @@ graph TD
 ```
 
  - 循序圖 (Sequence Diagram)
+
 ```mermaid
 sequenceDiagram
     participant User
@@ -104,6 +112,7 @@ sequenceDiagram
     HTML->>User: 顯示更新後的預覽
 ```
  - 版面配置規劃 (Layout Planning)
+
 ```mermaid
 graph TD
     A[整體頁面] --> B[頁首區];
@@ -123,6 +132,7 @@ graph TD
     H --> L[側邊導航];
 ```
  - CSS 架構圖 (CSS Architecture Diagram)
+
 ```mermaid
 graph TD
 
@@ -146,6 +156,7 @@ graph TD
     index.html --> S5
 ```
  - 流程圖範例 
+
 ```mermaid
 graph TD
     A[開始] --> B{判斷};
