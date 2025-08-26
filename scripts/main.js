@@ -95,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('upload-btn').addEventListener('click', () => fileHandler.upload(editor, updateAll));
         document.getElementById('clear-btn').addEventListener('click', () => fileHandler.confirmClear(editor, updateAll));
         document.getElementById('export-pdf-btn').addEventListener('click', () => fileHandler.exportPDF(editor));
+        document.getElementById('demo-btn').addEventListener('click', () => fileHandler.insertDemoContent(editor, updateAll));
 
         // 主題切換按鈕
         themeToggleBtn.addEventListener('click', () => {
