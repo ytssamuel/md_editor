@@ -25,26 +25,33 @@ document.addEventListener('DOMContentLoaded', () => {
             let isDragging = false;
             
             gutter.addEventListener('mousedown', (e) => {
+                e.preventDefault(); 
                 if (splitContainer.classList.contains('view-mode-editor-only') || splitContainer.classList.contains('view-mode-preview-only')) {
                     return;
                 }
                 isDragging = true;
                 document.body.style.cursor = 'col-resize';
-                e.preventDefault();
             });
 
             document.addEventListener('mousemove', (e) => {
                 if (!isDragging) return;
-                const minWidth = 300;
-                let newWidth = e.clientX;
-                const maxPreviewWidth = splitContainer.offsetWidth - minWidth;
                 
-                if (newWidth < minWidth) newWidth = minWidth;
-                if (newWidth > maxPreviewWidth) newWidth = maxPreviewWidth;
+                e.preventDefault();
+
+                // 修正：使用 splitContainer 的 getBoundingClientRect().left 作為基準點
+                let newWidth = e.clientX - splitContainer.getBoundingClientRect().left;
+
+                // 修正：確保面板不會縮得太小
+                const minWidth = 100;
+                const maxWidth = splitContainer.offsetWidth - gutter.offsetWidth - minWidth;
                 
-                // 修正：改變父級面板的寬度
-                editorPanel.style.width = newWidth + 'px';
-                previewPanel.style.width = `calc(100% - ${newWidth}px - ${gutter.offsetWidth}px)`;
+                if (newWidth < minWidth) {
+                    newWidth = minWidth;
+                } else if (newWidth > maxWidth) {
+                    newWidth = maxWidth;
+                }
+                
+                editorPanel.style.width = `${newWidth / splitContainer.offsetWidth * 100}%`;
             });
 
             document.addEventListener('mouseup', () => {
@@ -54,71 +61,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // UI 更新與事件綁定
+    // 負責更新所有相關 UI 的回調函數
     const updateAll = () => {
-        // 在每次渲染前，根據當前主題重新初始化 Mermaid
-        const isLightMode = document.body.classList.contains('light-mode');
-        const mermaidTheme = isLightMode ? 'default' : 'dark';
-
-        window.mermaid.initialize({ 
-            theme: mermaidTheme,
-            startOnLoad: false,
-            // 由於不再處理自訂類別顏色，這裡的 flowchart 設定改回預設
-            flowchart: {
-                curve: 'basis'
-            }
-        });
-
-        markdownRenderer.updateAll(
-            editor,
-            preview,
-            lineNumbers,
-            navList,
-            window.marked,
-            window.hljs,
-            window.mermaid, // 傳入 mermaid 函式庫
-            window.ABCJS
-        );
+        markdownRenderer.updateAll(editor, preview, lineNumbers, navList, marked, hljs, mermaid, ABCJS);
     };
 
+    // 綁定所有事件監聽器
     const bindEventListeners = () => {
-        editor.addEventListener('input', () => {
-            updateAll();
-        });
+        // 編輯器內容變動時觸發更新
+        editor.addEventListener('input', updateAll);
 
+        // 編輯器滾動時觸發行號同步
         editor.addEventListener('scroll', () => {
             markdownRenderer.syncScroll(editor, lineNumbers);
         });
-        
-        // 檔案操作按鈕
+
+        // 按鈕點擊事件監聽器
         document.getElementById('download-btn').addEventListener('click', () => fileHandler.download(editor));
         document.getElementById('upload-btn').addEventListener('click', () => fileHandler.upload(editor, updateAll));
-        document.getElementById('clear-btn').addEventListener('click', () => fileHandler.confirmClear(editor, updateAll));
         document.getElementById('export-pdf-btn').addEventListener('click', () => fileHandler.exportPDF(editor));
+        document.getElementById('clear-btn').addEventListener('click', () => fileHandler.confirmClear(editor, updateAll));
+        document.getElementById('load-demo-btn').addEventListener('click', () => fileHandler.insertDemoContent(editor, updateAll));
+        
+        // 主題切換
+        themeToggleBtn.addEventListener('click', uiManager.toggleTheme);
 
-        // 主題切換按鈕
-        themeToggleBtn.addEventListener('click', () => {
-            uiManager.toggleTheme();
-            // 在切換主題後，重新渲染一次預覽區
-            updateAll(); 
-        });
-
-        // 檢視模式按鈕
+        // 檢視模式切換
         viewButtonsContainer.addEventListener('click', (e) => {
-            const button = e.target.closest('button');
-            if (button) {
-                const mode = button.dataset.mode;
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                const btn = e.target.closest('button');
+                const mode = btn.id.replace('view-', '');
                 uiManager.setViewMode(mode);
-
-                // 修正: 檢查是否切換到 "both" 模式，並重設面板寬度
-                if (mode === 'both') {
-                    editorPanel.style.width = '50%';
-                    previewPanel.style.width = '50%';
+                // 在切換到混合或預覽模式時觸發更新
+                if (mode === 'both' || mode === 'preview-only') {
+                    // 同步滾動
+                    markdownRenderer.updateSidebar(navList, preview);
+                    editor.dispatchEvent(new Event('scroll'));
                 }
-
-                markdownRenderer.updatePreview(editor, preview, navList, window.marked, window.hljs, window.mermaid, window.ABCJS);
-                markdownRenderer.updateSidebar(navList, preview);
-                editor.dispatchEvent(new Event('scroll'));
             }
         });
 
@@ -151,8 +130,11 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('hljs-theme').href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/atom-one-dark.min.css";
         }
 
-        // 首次啟動時，也會執行 updateAll 來初始化所有內容和主題
+        // 確保初始渲染
         updateAll();
+
+        // 確保頁面載入後，可以正常顯示初始預覽區塊
+        uiManager.setViewMode('both');
     };
 
     initialize();
