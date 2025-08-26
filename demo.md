@@ -31,6 +31,9 @@ $$
 \\cos^2 \\theta + \\sin^2 \\theta = 1
 \\]
 
+<div style="page-break-after: always;"></div>
+<br><br>
+
 ### Mermaid 圖表
 
  - 系統架構圖 (Architecture Diagram)
@@ -74,11 +77,11 @@ graph TD
     markdownRenderer.js --引用並呼叫--> L4
     markdownRenderer.js --引用並呼叫--> L5
 
-    style L1 fill:#f9f,stroke:#333,stroke-width:2px
-    style L2 fill:#f9f,stroke:#333,stroke-width:2px
-    style L3 fill:#f9f,stroke:#333,stroke-width:2px
-    style L4 fill:#f9f,stroke:#333,stroke-width:2px
-    style L5 fill:#f9f,stroke:#333,stroke-width:2px
+    style L1 fill:#005AB5,stroke:#333,stroke-width:2px
+    style L2 fill:#005AB5,stroke:#333,stroke-width:2px
+    style L3 fill:#005AB5,stroke:#333,stroke-width:2px
+    style L4 fill:#D26900,stroke:#333,stroke-width:2px
+    style L5 fill:#FFA042,stroke:#333,stroke-width:2px
 ```
 
  - 循序圖 (Sequence Diagram)
@@ -112,6 +115,9 @@ sequenceDiagram
     Main->>HTML: 觸發 editor 'scroll' 事件 (同步捲動)
     HTML->>User: 顯示更新後的預覽
 ```
+<div style="page-break-after: always;"></div>
+<br><br>
+
  - 版面配置規劃 (Layout Planning)
 
 ```mermaid
@@ -156,6 +162,10 @@ graph TD
     index.html --> S4
     index.html --> S5
 ```
+<div style="page-break-after: always;"></div>
+<br><br>
+
+
  - 流程圖範例 
 
 ```mermaid
@@ -166,6 +176,10 @@ graph TD
     C --> E[結束];
     D --> E;
 ```
+
+<div style="page-break-after: always;"></div>
+<br><br>
+
 ### 樂譜範例
 ```abc
 X:1
