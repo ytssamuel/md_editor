@@ -38,8 +38,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (newWidth < minWidth) newWidth = minWidth;
                 if (newWidth > maxPreviewWidth) newWidth = maxPreviewWidth;
                 
-                editor.style.width = newWidth + 'px';
-                preview.style.width = `calc(100% - ${newWidth}px - ${gutter.offsetWidth}px)`;
+                // 修正：直接設置父容器的寬度
+                document.getElementById('editor-panel').style.width = newWidth + 'px';
+                document.getElementById('preview-panel').style.width = `calc(100% - ${newWidth}px - ${gutter.offsetWidth}px)`;
             });
 
             document.addEventListener('mouseup', () => {
@@ -52,13 +53,31 @@ document.addEventListener('DOMContentLoaded', () => {
     // UI 更新與事件綁定
     const updateAll = () => {
         // 在每次渲染前，根據當前主題重新初始化 Mermaid
-        const mermaidTheme = document.body.classList.contains('light-mode') ? 'default' : 'dark';
+        const isLightMode = document.body.classList.contains('light-mode');
+        const mermaidTheme = isLightMode ? 'default' : 'dark';
+        
+        // 根據主題設定自訂的 Mermaid 類別顏色
+        const highlightColor = isLightMode ? '#ff69b4' : '#61afef'; // 淺色模式用粉色，深色模式用藍色
+
         window.mermaid.initialize({ 
             theme: mermaidTheme,
             startOnLoad: false,
-            // 更多客製化設定，如果需要
+            // 新增：設定 Mermaid 流程圖的 class 屬性
             flowchart: {
-                curve: 'basis'
+                curve: 'basis',
+                classes: [
+                    {
+                        name: 'highlight', // 自訂類別名稱
+                        styles: {
+                            fill: highlightColor,
+                            'fill-opacity': 0.8,
+                            stroke: highlightColor,
+                            'stroke-width': '2px',
+                            color: isLightMode ? '#fff' : '#000', // 文字顏色
+                            'font-weight': 'bold'
+                        }
+                    }
+                ]
             }
         });
 
@@ -102,7 +121,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (button) {
                 const mode = button.dataset.mode;
                 uiManager.setViewMode(mode);
-                // 在切換模式後重新渲染一次，並更新大綱
+
+                // 修正: 檢查是否切換到 "both" 模式，並重設面板寬度
+                if (mode === 'both') {
+                    document.getElementById('editor-panel').style.width = '50%';
+                    document.getElementById('preview-panel').style.width = '50%';
+                }
+
                 markdownRenderer.updatePreview(editor, preview, navList, window.marked, window.hljs, window.mermaid, window.ABCJS);
                 markdownRenderer.updateSidebar(navList, preview);
                 editor.dispatchEvent(new Event('scroll'));
