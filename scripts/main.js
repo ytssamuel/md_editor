@@ -14,6 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const navList = document.getElementById('nav-list');
     const mainHeader = document.getElementById('main-header');
     const topToggleBtn = document.getElementById('top-toggle-btn');
+    
+    // 取得面板元素
+    const editorPanel = document.getElementById('editor-panel');
+    const previewPanel = document.getElementById('preview-panel');
 
     // 分割線拖動邏輯
     const gutterManager = {
@@ -38,8 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (newWidth < minWidth) newWidth = minWidth;
                 if (newWidth > maxPreviewWidth) newWidth = maxPreviewWidth;
                 
-                editor.style.width = newWidth + 'px';
-                preview.style.width = `calc(100% - ${newWidth}px - ${gutter.offsetWidth}px)`;
+                // 修正：改變父級面板的寬度
+                editorPanel.style.width = newWidth + 'px';
+                previewPanel.style.width = `calc(100% - ${newWidth}px - ${gutter.offsetWidth}px)`;
             });
 
             document.addEventListener('mouseup', () => {
@@ -52,11 +57,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // UI 更新與事件綁定
     const updateAll = () => {
         // 在每次渲染前，根據當前主題重新初始化 Mermaid
-        const mermaidTheme = document.body.classList.contains('light-mode') ? 'default' : 'dark';
+        const isLightMode = document.body.classList.contains('light-mode');
+        const mermaidTheme = isLightMode ? 'default' : 'dark';
+
         window.mermaid.initialize({ 
             theme: mermaidTheme,
             startOnLoad: false,
-            // 更多客製化設定，如果需要
+            // 由於不再處理自訂類別顏色，這裡的 flowchart 設定改回預設
             flowchart: {
                 curve: 'basis'
             }
@@ -102,7 +109,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (button) {
                 const mode = button.dataset.mode;
                 uiManager.setViewMode(mode);
-                // 在切換模式後重新渲染一次，並更新大綱
+
+                // 修正: 檢查是否切換到 "both" 模式，並重設面板寬度
+                if (mode === 'both') {
+                    editorPanel.style.width = '50%';
+                    previewPanel.style.width = '50%';
+                }
+
                 markdownRenderer.updatePreview(editor, preview, navList, window.marked, window.hljs, window.mermaid, window.ABCJS);
                 markdownRenderer.updateSidebar(navList, preview);
                 editor.dispatchEvent(new Event('scroll'));
