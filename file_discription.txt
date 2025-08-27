@@ -1,23 +1,59 @@
-
-
 /
-├── index.html
-├── style.css
-└── scripts/
-    ├── main.js             // 核心程式碼，負責初始化與模組導入
-    ├── uiManager.js        // 處理所有 UI 相關功能 (主題切換、檢視模式)
-    ├── fileHandler.js      // 處理所有檔案操作 (下載、上傳、清除)
-    ├── markdownRenderer.js // 處理 Markdown 渲染與同步
-    └── modalManager.js     // 處理自定義模態框
-
-
-/
-├── index.html
+├── index.html          // HTML 主檔案，包含頁面結構和外部資源引用
+├── favicon.svg         // 網頁標籤圖示
+├── styles/
+│   ├── main.css      // 主樣式檔案，匯入所有其他樣式
+│   ├── variables.css // CSS 變數，定義顏色、字體等
+│   ├── base.css      // 基礎樣式，設定 HTML 元素的預設樣式
+│   ├── components.css// 組件樣式，定義可重用 UI 組件的樣式
+│   ├── layout.css    // 佈局樣式，控制頁面整體佈局
+│   └── markdown.css  // Markdown 渲染區塊的樣式
 ├── scripts/
-└── styles/
-    ├── main.css          // 主入口，負責引入所有其他樣式
-    ├── variables.css     // 存放顏色、字體等變數
-    ├── base.css          // 存放 HTML 元素基礎樣式 (body, h1, p)
-    ├── components.css    // 存放可重用組件樣式 (按鈕, 模態框)
-    ├── layout.css        // 存放整體佈局樣式 (split-container, gutter)
-    └── markdown.css      // 存放 Markdown 渲染區塊樣式 (#preview)
+│   ├── main.js         // 核心程式碼，負責初始化、事件綁定和模組導入
+│   ├── uiManager.js    // UI 管理模組，處理主題切換和檢視模式
+│   ├── fileHandler.js  // 檔案處理模組，處理檔案上傳、下載和清除
+│   ├── markdownRenderer.js// Markdown 渲染模組，處理 Markdown 轉換和程式碼高亮
+│   └── modalManager.js // 模態框管理模組，處理自定義模態框的顯示和操作
+├── demo.md             // 示範用的 Markdown 檔案
+└── README.md           // 專案說明文件
+
+說明：
+
+- index.html：
+  - 專案的入口點，定義了頁面的基本結構。
+  - 引入了 CSS 樣式檔案、JavaScript 腳本和外部函式庫。
+  - 包含編輯器、預覽區、工具列和側邊欄等 UI 元素。
+
+- styles/：
+  - 包含所有 CSS 樣式檔案，用於控制頁面的外觀和佈局。
+  - main.css 是主樣式檔案，負責匯入其他樣式檔案。
+  - variables.css 定義了 CSS 變數，方便樣式管理和維護。
+  - base.css 設定了 HTML 元素的預設樣式，例如 body、h1 和 p。
+  - components.css 定義了可重用 UI 組件的樣式，例如按鈕和模態框。
+  - layout.css 控制頁面的整體佈局，例如分割容器和側邊欄。
+  - markdown.css 定義了 Markdown 渲染區塊的樣式，例如預覽區。
+
+- scripts/：
+  - 包含所有 JavaScript 腳本，用於處理頁面的互動和邏輯。
+  - main.js 是核心腳本，負責初始化應用程式、綁定事件和導入其他模組。
+  - uiManager.js 處理 UI 相關的功能，例如主題切換和檢視模式。
+  - fileHandler.js 處理檔案操作，例如上傳、下載和清除。
+  - markdownRenderer.js 處理 Markdown 渲染和程式碼高亮。
+  - modalManager.js 處理自定義模態框的顯示和操作。
+
+- 函式庫：
+  - marked.js：用於將 Markdown 轉換為 HTML。
+  - highlight.js：用於程式碼高亮。
+  - mermaid.js：用於渲染 Mermaid 圖表。
+  - abcjs：用於渲染 ABC 樂譜。
+  - MathJax：用於渲染數學公式。
+
+- 流程：
+  1.  使用者在編輯器中輸入 Markdown 內容。
+  2.  main.js 監聽 editor 的 'input' 事件。
+  3.  事件觸發時，main.js 呼叫 markdownRenderer.updateAll()。
+  4.  markdownRenderer.updateAll() 呼叫 marked.parse() 將 Markdown 轉換為 HTML。
+  5.  markdownRenderer.updateAll() 更新預覽區的 innerHTML。
+  6.  markdownRenderer.updateAll() 呼叫 highlight.js、mermaid.js、abcjs 和 MathJax 渲染相應的內容。
+  7.  markdownRenderer.updateAll() 呼叫 updateSidebar() 更新文件大綱。
+  8.  main.js 監聽 editor 的 'scroll' 事件，同步編輯器和行號的捲動。
