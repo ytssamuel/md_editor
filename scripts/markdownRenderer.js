@@ -158,10 +158,6 @@ export const markdownRenderer = {
     // ------------------------------------------------------------------
     // 以下為非渲染相關的輔助函式，保持不變
     // ------------------------------------------------------------------
-
-    updateAll: (editor, preview, navList, marked, hljs, mermaid, ABCJS) => {
-        markdownRenderer.updatePreview(editor, preview, navList, marked, hljs, mermaid, ABCJS);
-    },
     
     updateSidebar: (navList, preview) => {
         const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');

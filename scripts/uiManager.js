@@ -1,9 +1,8 @@
 export const uiManager = {
-    toggleTheme: () => {
+    toggleTheme: (editor) => {
         const themeToggleBtn = document.getElementById('theme-toggle-btn');
         const hljsTheme = document.getElementById('hljs-theme');
         const isLightMode = document.body.classList.toggle('light-mode');
-        const editor = document.querySelector('.CodeMirror').CodeMirror;
         
         // 判斷當前是否為淺色模式，並更新 UI 顯示和 localStorage
         if (isLightMode) {
@@ -37,5 +36,12 @@ export const uiManager = {
         } else {
             document.getElementById('view-both').classList.add('active-view');
         }
+    },
+    bindEventListeners: () => {
+        const topToggleBtn = document.getElementById('top-toggle-btn');
+        topToggleBtn.addEventListener('click', () => {
+            const isHidden = document.body.classList.toggle('collapsed-header');
+            topToggleBtn.title = isHidden ? "顯示標頭" : "隱藏標頭";
+        });
     }
 };

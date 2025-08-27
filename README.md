@@ -46,7 +46,8 @@
 │   ├── uiManager.js    // UI 管理模組，處理主題切換和檢視模式
 │   ├── fileHandler.js  // 檔案處理模組，處理檔案上傳、下載和清除
 │   ├── markdownRenderer.js// Markdown 渲染模組，處理 Markdown 轉換和程式碼高亮
-│   └── modalManager.js // 模態框管理模組，處理自定義模態框的顯示和操作
+│   ├── modalManager.js // 模態框管理模組，處理自定義模態框的顯示和操作
+│   └── settingsManager.js// 設定管理模組，處理標題顏色等設定
 ├── demo.md             // 示範用的 Markdown 檔案
 └── README.md           // 專案說明文件
 ```
