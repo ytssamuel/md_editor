@@ -67,6 +67,10 @@
             </div>
 
             <div class="right-buttons">
+                <button id="settings-btn">
+                    <i class="fas fa-cog"></i>
+                    設定
+                </button>
                 <button id="theme-toggle-btn">
                     <i class="fas fa-sun"></i>
                     <span id="theme-text">淺色模式</span>
@@ -110,6 +114,53 @@
             <div class="modal-buttons">
                 <button id="modal-ok">確定</button>
                 <button id="modal-cancel" class="secondary">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>標題顏色設定</h2>
+            <div class="color-settings">
+                <div class="setting-row">
+                    <label for="h1-color">H1 顏色:</label>
+                    <select id="h1-color">
+                        <option value="var(--text-color)">黑色</option>
+                        <option value="#61afef">藍色</option>
+                        <option value="#e06c75">紅色</option>
+                        <option value="#d19a66">橘色</option>
+                        <option value="#98c379">綠色</option>
+                        <option value="#c678dd">紫色</option>
+                        
+                    </select>
+                </div>
+                <div class="setting-row">
+                    <label for="h2-color">H2 顏色:</label>
+                    <select id="h2-color">
+                        <option value="var(--text-color)">黑色</option>
+                        <option value="#61afef">藍色</option>
+                        <option value="#e06c75">紅色</option>
+                        <option value="#d19a66">橘色</option>
+                        <option value="#98c379">綠色</option>
+                        <option value="#c678dd">紫色</option>
+                    </select>
+                </div>
+                <div class="setting-row">
+                    <label for="h3-color">H3 顏色:</label>
+                    <select id="h3-color">
+                        <option value="var(--text-color)">黑色</option>
+                        <option value="#61afef">藍色</option>
+                        <option value="#e06c75">紅色</option>
+                        <option value="#d19a66">橘色</option>
+                        <option value="#98c379">綠色</option>
+                        <option value="#c678dd">紫色</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button id="save-settings">儲存</button>
+                <button id="reset-settings" class="secondary">還原預設值</button>
             </div>
         </div>
     </div>

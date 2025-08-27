@@ -161,6 +161,64 @@
     transform: rotate(180deg);
 }
 
+/* 設定按鈕和設定面板的樣式 */
+#settings-btn {
+    background: var(--button-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 0.8rem;
+}
+
+#settings-btn:hover {
+    background: var(--button-hover-bg);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+#settingsModal .modal-content {
+    max-width: 500px;
+}
+
+#settingsModal .modal-content h2 {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.color-settings {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.setting-row {
+    display: flex;
+    flex-direction: column;
+}
+
+.setting-row label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+.setting-row select {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background: var(--modal-input-bg);
+    color: var(--modal-input-color);
+    width: 100%;
+}
+
 /* 響應式設計 */
 @media (max-width: 768px) {
     /* ...existing code... */

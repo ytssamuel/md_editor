@@ -138,6 +138,77 @@ document.addEventListener('DOMContentLoaded', () => {
                 topToggleBtn.title = "隱藏標頭";
             }
         });
+
+        // 設定按鈕
+        document.getElementById('settings-btn').addEventListener('click', () => {
+            const settingsModal = document.getElementById('settingsModal');
+            settingsModal.style.display = 'flex';
+        });
+
+        // 關閉設定面板
+        document.querySelectorAll('.modal-close').forEach(closeBtn => {
+            closeBtn.addEventListener('click', () => {
+                const modal = closeBtn.closest('.modal');
+                modal.style.display = 'none';
+            });
+        });
+
+        // 儲存設定
+        document.getElementById('save-settings').addEventListener('click', () => {
+            const h1Color = document.getElementById('h1-color').value;
+            const h2Color = document.getElementById('h2-color').value;
+            const h3Color = document.getElementById('h3-color').value;
+
+            localStorage.setItem('h1Color', h1Color);
+            localStorage.setItem('h2Color', h2Color);
+            localStorage.setItem('h3Color', h3Color);
+
+            applyHeadingColors(h1Color, h2Color, h3Color);
+
+            const settingsModal = document.getElementById('settingsModal');
+            settingsModal.style.display = 'none';
+        });
+
+        // 還原預設值
+        document.getElementById('reset-settings').addEventListener('click', () => {
+            localStorage.removeItem('h1Color');
+            localStorage.removeItem('h2Color');
+            localStorage.removeItem('h3Color');
+
+            // 重置下拉選單
+            document.getElementById('h1-color').value = '#61afef';
+            document.getElementById('h2-color').value = '#61afef';
+            document.getElementById('h3-color').value = '#98c379';
+
+            applyHeadingColors(); // 應用預設顏色
+
+            const settingsModal = document.getElementById('settingsModal');
+            settingsModal.style.display = 'none';
+        });
+
+        // 點擊 modal 外部關閉
+        window.addEventListener('click', (event) => {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = "none";
+            }
+        });
+
+        const applyHeadingColors = (h1Color, h2Color, h3Color) => {
+            const root = document.documentElement;
+
+            root.style.setProperty('--h1-color', h1Color || 'var(--accent-color)');
+            root.style.setProperty('--h2-color', h2Color || 'var(--accent-color)');
+            root.style.setProperty('--h3-color', h3Color || 'var(--highlight-color)');
+
+            // 重新渲染預覽區
+            updateAll();
+        };
+
+        // 應用儲存的顏色或預設顏色
+        const savedH1Color = localStorage.getItem('h1Color');
+        const savedH2Color = localStorage.getItem('h2Color');
+        const savedH3Color = localStorage.getItem('h3Color');
+        applyHeadingColors(savedH1Color, savedH2Color, savedH3Color);
     };
 
     // 初始化應用程式

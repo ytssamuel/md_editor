@@ -18,6 +18,11 @@
     --modal-input-color: #abb2bf;
     --sidebar-bg: #1b1e22;
 
+    /* 標題顏色 */
+    --h1-color: var(--accent-color);
+    --h2-color: var(--accent-color);
+    --h3-color: var(--highlight-color);
+
     /* 字體 */
     --font-family: 'Inter', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
@@ -41,4 +46,5 @@
     --modal-input-bg: #e9ecef;
     --modal-input-color: #343a40;
     --sidebar-bg: #e9ecef;
+
 }
