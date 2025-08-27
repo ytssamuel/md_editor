@@ -48,6 +48,7 @@
     line-height: 1.45;
     border: 1px solid var(--border-color);
     transition: background-color 0.3s ease, border-color 0.3s ease;
+    position: relative; /* 建議：加入行號顯示 */
 }
 
 #preview pre code {
@@ -57,6 +58,7 @@
     color: var(--text-color);
 }
 
+/* 建議：行號樣式 */
 .light-mode #preview pre code {
     color: var(--text-color);
 }

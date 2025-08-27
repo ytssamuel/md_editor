@@ -160,3 +160,27 @@
 .collapsed-header #top-toggle-btn i {
     transform: rotate(180deg);
 }
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    /* ...existing code... */
+}
+
+/* 小螢幕字體調整 */
+@media (max-width: 576px) {
+    body {
+        font-size: 14px;
+    }
+
+    #preview h1 {
+        font-size: 1.5rem;
+    }
+
+    #preview h2 {
+        font-size: 1.3rem;
+    }
+
+    #preview h3 {
+        font-size: 1.1rem;
+    }
+}

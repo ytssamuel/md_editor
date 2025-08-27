@@ -113,8 +113,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // 修正: 檢查是否切換到 "both" 模式，並重設面板寬度
                 if (mode === 'both') {
-                    editorPanel.style.width = '50%';
-                    previewPanel.style.width = '50%';
+                    editorPanel.style.flex = '1';
+                    previewPanel.style.flex = '1';
+                } else if (mode === 'editor-only') {
+                    editorPanel.style.flex = '1';
+                    previewPanel.style.flex = '0';
+                } else if (mode === 'preview-only') {
+                    editorPanel.style.flex = '0';
+                    previewPanel.style.flex = '1';
                 }
 
                 markdownRenderer.updatePreview(editor, preview, navList, window.marked, window.hljs, window.mermaid, window.ABCJS);

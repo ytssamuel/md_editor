@@ -27,6 +27,11 @@ export const fileHandler = {
         fileInput.click();
         fileInput.onchange = (e) => {
             const file = e.target.files[0];
+            //檔案大小限制10MB
+            if (file && file.size > 10 * 1024 * 1024) { // 10MB
+                modalManager.show('檔案大小超過 10MB，請選擇較小的檔案。', false);
+                return;
+            }
             if (file) {
                 const reader = new FileReader();
                 reader.onload = (event) => {
@@ -42,7 +47,37 @@ export const fileHandler = {
             await modalManager.show('編輯器內容是空的，無法產生 PDF！', false);
             return;
         }
+
+        const splitContainer = document.getElementById('split-container');
+        const editorPanel = document.getElementById('editor-panel');
+        const previewPanel = document.getElementById('preview-panel');
+
+        // 儲存目前的檢視模式和面板寬度
+        const currentViewMode = splitContainer.classList.contains('view-mode-editor-only') ? 'editor-only' :
+                                splitContainer.classList.contains('view-mode-preview-only') ? 'preview-only' : 'both';
+        const editorPanelWidth = editorPanel.style.flex;
+        const previewPanelWidth = previewPanel.style.flex;
+
+        // 暫時切換到預覽模式，確保列印時預覽內容佔滿整個區域
+        splitContainer.classList.remove('view-mode-editor-only', 'view-mode-preview-only');
+        splitContainer.classList.add('view-mode-preview-only');
+        editorPanel.style.flex = '0';
+        previewPanel.style.flex = '1';
+
+        // 觸發列印
         window.print();
+
+        // 列印完成後，恢復原來的檢視模式和面板寬度
+        splitContainer.classList.remove('view-mode-editor-only', 'view-mode-preview-only');
+        if (currentViewMode === 'editor-only') {
+            splitContainer.classList.add('view-mode-editor-only');
+        } else if (currentViewMode === 'both') {
+            splitContainer.classList.add('view-mode-both');
+            editorPanel.style.flex = editorPanelWidth;
+            previewPanel.style.flex = previewPanelWidth;
+        } else {
+            splitContainer.classList.add('view-mode-preview-only');
+        }
     },
     confirmClear: async (editor, updateCallback) => {
         // 修正：使用您提供的 modalManager 參數

@@ -17,6 +17,9 @@
     --modal-input-bg: #2c313a;
     --modal-input-color: #abb2bf;
     --sidebar-bg: #1b1e22;
+
+    /* 字體 */
+    --font-family: 'Inter', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
 /* 淺色主題的 CSS 變數 */
