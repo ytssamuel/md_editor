@@ -11,7 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
         lineNumbers: true,
         lineWrapping: true,
         autofocus: true,
-        styleActiveLine: true,
+        styleActiveLine: { nonEmpty: true },
+        styleActiveSelected: true
     });
 
     // 初始化 Marked.js，只執行一次
@@ -93,43 +94,23 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const bindEventListeners = () => {
-        let isSyncing = false;
+        const syncEditorToPreview = () => {
+            const scrollInfo = editor.getScrollInfo();
+            // 避免在沒有滾動條時計算，導致 NaN
+            if (scrollInfo.height <= scrollInfo.clientHeight) {
+                return;
+            }
+            const ratio = scrollInfo.top / (scrollInfo.height - scrollInfo.clientHeight);
+            preview.scrollTop = ratio * (preview.scrollHeight - preview.clientHeight);
+        };
 
         editor.on('change', () => {
             updateAll();
+            syncEditorToPreview();
         });
 
         editor.on('scroll', () => {
-            if (isSyncing) return;
-            isSyncing = true;
-
-            const scrollInfo = editor.getScrollInfo();
-            // 避免在沒有滾動條時計算，導致 NaN
-            if (scrollInfo.height > scrollInfo.clientHeight) {
-                const ratio = scrollInfo.top / (scrollInfo.height - scrollInfo.clientHeight);
-                preview.scrollTop = ratio * (preview.scrollHeight - preview.clientHeight);
-            }
-            
-            // 使用 requestAnimationFrame 確保在下一幀才解除鎖定
-            requestAnimationFrame(() => {
-                isSyncing = false;
-            });
-        });
-
-        preview.addEventListener('scroll', () => {
-            if (isSyncing) return;
-            isSyncing = true;
-
-            const { scrollTop, scrollHeight, clientHeight } = preview;
-            if (scrollHeight > clientHeight) {
-                const ratio = scrollTop / (scrollHeight - clientHeight);
-                const scrollInfo = editor.getScrollInfo();
-                editor.scrollTo(null, ratio * (scrollInfo.height - scrollInfo.clientHeight));
-            }
-
-            requestAnimationFrame(() => {
-                isSyncing = false;
-            });
+            syncEditorToPreview();
         });
         
         // 檔案操作按鈕

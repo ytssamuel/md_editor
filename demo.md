@@ -204,6 +204,9 @@ w: 歡-迎-來-到 | ABC-記-譜-法 | 世-界-真-奇-妙 | 音樂-真-美-妙-
 
 ---
 
+<div style="page-break-after: always;"></div>
+<br><br>
+
 # 專案架構文件
 
 本文件旨在說明 Markdown 編輯器的整體架構、資料流程以及 CSS/JavaScript 的模組化設計。
@@ -265,6 +268,9 @@ graph TD
 
 ---
 
+<div style="page-break-after: always;"></div>
+<br><br>
+
 ## 2. 渲染流程循序圖
 
 此圖詳細說明了從使用者在編輯器中輸入文字到預覽區更新的完整流程。
@@ -297,6 +303,9 @@ sequenceDiagram
 6.  最終，將渲染完成的 HTML 內容更新到預覽面板中，並刷新文件大綱。
 
 ---
+
+<div style="page-break-after: always;"></div>
+<br><br>
 
 ## 3. CSS 架構
 
@@ -342,6 +351,9 @@ graph TD
 
 ---
 
+<div style="page-break-after: always;"></div>
+<br><br>
+
 ## 4. JavaScript 架構
 
 JavaScript 同樣採用模組化設計，每個模組職責分明，透過 `main.js` 進行協調。
@@ -379,7 +391,4 @@ graph TD
 -   **`settingsManager.js`**：設定管理器。職責：處理設定面板的所有邏輯，包括儲存、讀取和應用設定。
 -   **`markdownRenderer.js`**：渲染器。職責：協調 `marked.js` 和其他函式庫，將 Markdown 文本轉換為最終的預覽內容。
 -   **`modalManager.js`**：模態框管理器。職責：提供一個統一的 API 來顯示各類型的對話框。
-
-
-
 
