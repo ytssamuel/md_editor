@@ -93,18 +93,43 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const bindEventListeners = () => {
+        let isSyncing = false;
+
         editor.on('change', () => {
             updateAll();
         });
 
         editor.on('scroll', () => {
+            if (isSyncing) return;
+            isSyncing = true;
+
             const scrollInfo = editor.getScrollInfo();
             // 避免在沒有滾動條時計算，導致 NaN
-            if (scrollInfo.height <= scrollInfo.clientHeight) {
-                return;
+            if (scrollInfo.height > scrollInfo.clientHeight) {
+                const ratio = scrollInfo.top / (scrollInfo.height - scrollInfo.clientHeight);
+                preview.scrollTop = ratio * (preview.scrollHeight - preview.clientHeight);
             }
-            const ratio = scrollInfo.top / (scrollInfo.height - scrollInfo.clientHeight);
-            preview.scrollTop = ratio * (preview.scrollHeight - preview.clientHeight);
+            
+            // 使用 requestAnimationFrame 確保在下一幀才解除鎖定
+            requestAnimationFrame(() => {
+                isSyncing = false;
+            });
+        });
+
+        preview.addEventListener('scroll', () => {
+            if (isSyncing) return;
+            isSyncing = true;
+
+            const { scrollTop, scrollHeight, clientHeight } = preview;
+            if (scrollHeight > clientHeight) {
+                const ratio = scrollTop / (scrollHeight - clientHeight);
+                const scrollInfo = editor.getScrollInfo();
+                editor.scrollTo(null, ratio * (scrollInfo.height - scrollInfo.clientHeight));
+            }
+
+            requestAnimationFrame(() => {
+                isSyncing = false;
+            });
         });
         
         // 檔案操作按鈕
