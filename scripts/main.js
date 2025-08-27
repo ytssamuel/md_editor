@@ -19,6 +19,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const editorPanel = document.getElementById('editor-panel');
     const previewPanel = document.getElementById('preview-panel');
 
+    // 顏色對應表
+    const colorMap = {
+        'default-text': { dark: '#abb2bf', light: '#343a40' }, // 直接使用顏色代碼
+        'blue':         { dark: '#61afef', light: '#0056b3' },
+        'red':          { dark: '#e06c75', light: '#c82333' },
+        'orange':       { dark: '#d19a66', light: '#e08e0b' },
+        'green':        { dark: '#98c379', light: '#218838' },
+        'purple':       { dark: '#c678dd', light: '#563d7c' }
+    };
+
     // 分割線拖動邏輯
     const gutterManager = {
         setup: () => {
@@ -100,7 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // 主題切換按鈕
         themeToggleBtn.addEventListener('click', () => {
             uiManager.toggleTheme();
-            // 在切換主題後，重新渲染一次預覽區
+            // 在切換主題後，重新應用標題顏色並渲染一次預覽區
+            applyHeadingColors();
             updateAll(); 
         });
 
@@ -155,15 +166,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 儲存設定
         document.getElementById('save-settings').addEventListener('click', () => {
-            const h1Color = document.getElementById('h1-color').value;
-            const h2Color = document.getElementById('h2-color').value;
-            const h3Color = document.getElementById('h3-color').value;
+            const h1ColorKey = document.getElementById('h1-color').value;
+            const h2ColorKey = document.getElementById('h2-color').value;
+            const h3ColorKey = document.getElementById('h3-color').value;
 
-            localStorage.setItem('h1Color', h1Color);
-            localStorage.setItem('h2Color', h2Color);
-            localStorage.setItem('h3Color', h3Color);
+            localStorage.setItem('h1ColorKey', h1ColorKey);
+            localStorage.setItem('h2ColorKey', h2ColorKey);
+            localStorage.setItem('h3ColorKey', h3ColorKey);
 
-            applyHeadingColors(h1Color, h2Color, h3Color);
+            applyHeadingColors();
 
             const settingsModal = document.getElementById('settingsModal');
             settingsModal.style.display = 'none';
@@ -171,14 +182,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 還原預設值
         document.getElementById('reset-settings').addEventListener('click', () => {
-            localStorage.removeItem('h1Color');
-            localStorage.removeItem('h2Color');
-            localStorage.removeItem('h3Color');
+            localStorage.removeItem('h1ColorKey');
+            localStorage.removeItem('h2ColorKey');
+            localStorage.removeItem('h3ColorKey');
 
             // 重置下拉選單
-            document.getElementById('h1-color').value = '#61afef';
-            document.getElementById('h2-color').value = '#61afef';
-            document.getElementById('h3-color').value = '#98c379';
+            document.getElementById('h1-color').value = 'blue';
+            document.getElementById('h2-color').value = 'blue';
+            document.getElementById('h3-color').value = 'green';
 
             applyHeadingColors(); // 應用預設顏色
 
@@ -193,22 +204,31 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        const applyHeadingColors = (h1Color, h2Color, h3Color) => {
+        const applyHeadingColors = () => {
             const root = document.documentElement;
+            const isLightMode = document.body.classList.contains('light-mode');
+            const theme = isLightMode ? 'light' : 'dark';
 
-            root.style.setProperty('--h1-color', h1Color || 'var(--accent-color)');
-            root.style.setProperty('--h2-color', h2Color || 'var(--accent-color)');
-            root.style.setProperty('--h3-color', h3Color || 'var(--highlight-color)');
+            const h1Key = localStorage.getItem('h1ColorKey') || 'blue';
+            const h2Key = localStorage.getItem('h2ColorKey') || 'blue';
+            const h3Key = localStorage.getItem('h3ColorKey') || 'green';
 
-            // 重新渲染預覽區
-            updateAll();
+            root.style.setProperty('--h1-color', colorMap[h1Key][theme]);
+            root.style.setProperty('--h2-color', colorMap[h2Key][theme]);
+            root.style.setProperty('--h3-color', colorMap[h3Key][theme]);
         };
 
-        // 應用儲存的顏色或預設顏色
-        const savedH1Color = localStorage.getItem('h1Color');
-        const savedH2Color = localStorage.getItem('h2Color');
-        const savedH3Color = localStorage.getItem('h3Color');
-        applyHeadingColors(savedH1Color, savedH2Color, savedH3Color);
+        const loadSettings = () => {
+            // 應用儲存的顏色或預設顏色
+            applyHeadingColors();
+
+            // 更新下拉選單的顯示值
+            document.getElementById('h1-color').value = localStorage.getItem('h1ColorKey') || 'blue';
+            document.getElementById('h2-color').value = localStorage.getItem('h2ColorKey') || 'blue';
+            document.getElementById('h3-color').value = localStorage.getItem('h3ColorKey') || 'green';
+        };
+
+        loadSettings();
     };
 
     // 初始化應用程式
@@ -230,6 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // 首次啟動時，也會執行 updateAll 來初始化所有內容和主題
+        applyHeadingColors(); // 確保在 updateAll 之前應用顏色
         updateAll();
     };
 
