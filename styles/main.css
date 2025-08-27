@@ -221,7 +221,23 @@
 
 /* 響應式設計 */
 @media (max-width: 768px) {
-    /* ...existing code... */
+    .toolbar {
+        justify-content: center; /* 在小螢幕上讓所有按鈕置中 */
+        gap: 8px;
+    }
+
+    .central-buttons {
+        flex: 1 1 auto; /* 允許其根據內容收縮 */
+        order: 2; /* 調整順序，讓主要按鈕在中間 */
+    }
+
+    #view-mode-bar {
+        order: 1;
+    }
+
+    .right-buttons {
+        order: 3;
+    }
 }
 
 /* 小螢幕字體調整 */

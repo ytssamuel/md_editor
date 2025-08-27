@@ -125,3 +125,15 @@ button.secondary:hover {
     text-decoration: none;
     cursor: pointer;
 }
+
+@media (max-width: 768px) {
+    button {
+        padding: 6px 10px;
+        font-size: 0.75rem;
+        gap: 4px;
+    }
+
+    button i {
+        font-size: 0.9em;
+    }
+}

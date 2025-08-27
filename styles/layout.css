@@ -256,18 +256,13 @@ header {
     }
 
     .toolbar {
-        flex-direction: column;
+        flex-direction: row; /* 改回 row，讓 flex-wrap 生效 */
         align-items: center;
-    }
-
-    button {
-        width: 100%;
-        justify-content: center;
     }
 
     .button-bar-container {
         position: static;
-        margin-top: 10px;
+        margin-top: 0; /* 移除多餘邊距 */
     }
 
     .nav-sidebar {
