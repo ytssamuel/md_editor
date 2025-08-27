@@ -1,11 +1,12 @@
 // 注意：這個檔案不再直接使用 marked、hljs、mermaid、abcjs
 // 這些函式庫將從外部傳入
+import { modalManager } from './modalManager.js';
 
 /**
  * 自訂 Marked.js Renderer，用來處理特殊 Markdown 語法。
  * Marked.js 會呼叫這些函式來生成 HTML。
  */
-const customRenderer = {
+export const customRenderer = {
     /**
      * 處理程式碼區塊。
      * @param {string} code 程式碼內容。
@@ -52,10 +53,7 @@ export const markdownRenderer = {
     updatePreview: (editor, preview, navList, marked, hljs, mermaid, ABCJS) => {
         console.log('--- 開始渲染預覽 ---');
         
-        // 確保 marked.js 的自訂渲染器被正確設定
-        marked.use({ renderer: customRenderer });
-
-        const markdownText = editor.value;
+        const markdownText = editor.getValue();
         const htmlContent = marked.parse(markdownText);
         preview.innerHTML = htmlContent;
         console.log('Markdown 已轉換為 HTML 並插入 DOM。');
@@ -101,6 +99,7 @@ export const markdownRenderer = {
             console.log('Mermaid 圖表渲染完成。');
         } catch (error) {
             console.error('Mermaid 圖表渲染失敗:', error);
+            modalManager.show(`Mermaid 圖表渲染失敗：\n${error.message}`, false);
         }
     },
 
@@ -132,6 +131,7 @@ export const markdownRenderer = {
                     newDiv.innerHTML = '';
                     newDiv.appendChild(errorDiv);
                     console.error('ABCJS 渲染失敗:', e);
+                    modalManager.show(`ABC 樂譜渲染失敗：\n${e.message}`, false);
                 }
             });
             console.log('ABC 樂譜渲染完成。');
@@ -159,25 +159,10 @@ export const markdownRenderer = {
     // 以下為非渲染相關的輔助函式，保持不變
     // ------------------------------------------------------------------
 
-    updateAll: (editor, preview, lineNumbers, navList, marked, hljs, mermaid, ABCJS) => {
+    updateAll: (editor, preview, navList, marked, hljs, mermaid, ABCJS) => {
         markdownRenderer.updatePreview(editor, preview, navList, marked, hljs, mermaid, ABCJS);
-        markdownRenderer.updateLineNumbers(editor, lineNumbers);
-        markdownRenderer.syncScroll(editor, lineNumbers);
     },
     
-    updateLineNumbers: (editor, lineNumbers) => {
-        const lines = editor.value.split('\n').length;
-        lineNumbers.innerHTML = '';
-        for (let i = 1; i <= lines; i++) {
-            const line = document.createElement('div');
-            line.textContent = i;
-            lineNumbers.appendChild(line);
-        }
-    },
-    syncScroll: (editor, lineNumbers) => {
-        const scrollTop = editor.scrollTop;
-        lineNumbers.scrollTop = scrollTop;
-    },
     updateSidebar: (navList, preview) => {
         const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
         navList.innerHTML = '';

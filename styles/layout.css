@@ -140,29 +140,52 @@ header {
     position: relative;
     flex-grow: 1;
     display: flex;
+    flex-direction: column; /* 確保 CodeMirror 能填滿容器 */
     min-height: 0;
 }
 
-.line-numbers {
-    background-color: var(--line-number-bg);
-    color: var(--line-number-color);
-    padding: 20px 10px 20px 20px;
-    text-align: right;
-    border-right: 1px solid var(--border-color);
-    font-family: 'Fira Code', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+.CodeMirror {
+    flex-grow: 1;
+    height: 100%;
+    font-family: var(--font-family); /* 修改：與預覽區字體一致 */
     font-size: 15px;
     line-height: 1.5;
-    user-select: none;
-    flex-shrink: 0;
-    transition: background 0.3s ease, color 0.3s ease;
-    width: 50px;
-    overflow-y: hidden;
 }
 
-/* 淺色模式下的行號顏色 */
-.light-mode .line-numbers {
-    color: #adb5bd; /* 淺色模式下的行號顏色 */
+/* 新增：CodeMirror 行號樣式 */
+.CodeMirror-gutters {
+    background-color: var(--line-number-bg) !important;
+    border-right: 1px solid var(--border-color) !important;
 }
+
+.CodeMirror-linenumber {
+    color: var(--line-number-color) !important;
+}
+
+/* CodeMirror 主題與語法高亮覆寫 */
+.cm-s-material-darker.CodeMirror, .cm-s-eclipse.CodeMirror {
+    background-color: var(--panel-bg);
+    color: var(--text-color);
+}
+
+.cm-s-material-darker .cm-keyword, .cm-s-eclipse .cm-keyword { color: var(--cm-keyword); }
+.cm-s-material-darker .cm-atom, .cm-s-eclipse .cm-atom { color: var(--cm-atom); }
+.cm-s-material-darker .cm-number, .cm-s-eclipse .cm-number { color: var(--cm-number); }
+.cm-s-material-darker .cm-def, .cm-s-eclipse .cm-def { color: var(--cm-def); }
+.cm-s-material-darker .cm-variable, .cm-s-eclipse .cm-variable,
+.cm-s-material-darker .cm-variable-2, .cm-s-eclipse .cm-variable-2,
+.cm-s-material-darker .cm-variable-3, .cm-s-eclipse .cm-variable-3 { color: var(--cm-variable); }
+.cm-s-material-darker .cm-property, .cm-s-eclipse .cm-property { color: var(--cm-property); }
+.cm-s-material-darker .cm-operator, .cm-s-eclipse .cm-operator { color: var(--cm-operator); }
+.cm-s-material-darker .cm-string, .cm-s-eclipse .cm-string { color: var(--cm-string); }
+.cm-s-material-darker .cm-string-2, .cm-s-eclipse .cm-string-2 { color: var(--cm-string-2); }
+.cm-s-material-darker .cm-meta, .cm-s-eclipse .cm-meta { color: var(--cm-meta); }
+.cm-s-material-darker .cm-error, .cm-s-eclipse .cm-error { background-color: var(--cm-error); color: #fff; }
+.cm-s-material-darker .cm-comment, .cm-s-eclipse .cm-comment { color: var(--cm-comment); }
+.cm-s-material-darker .cm-link, .cm-s-eclipse .cm-link { color: var(--cm-link); text-decoration: underline; }
+.cm-s-material-darker .cm-header, .cm-s-eclipse .cm-header { color: var(--cm-header); }
+.cm-s-material-darker .cm-quote, .cm-s-eclipse .cm-quote { color: var(--cm-quote); }
+
 
 #editor {
     flex-grow: 1;

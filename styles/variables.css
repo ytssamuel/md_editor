@@ -23,6 +23,23 @@
     --h2-color: var(--accent-color);
     --h3-color: var(--highlight-color);
 
+    /* CodeMirror 語法高亮顏色 - 深色模式 */
+    --cm-keyword: #c678dd;
+    --cm-atom: #d19a66;
+    --cm-number: #d19a66;
+    --cm-def: #e06c75;
+    --cm-variable: #e06c75;
+    --cm-property: #61afef;
+    --cm-operator: #c678dd;
+    --cm-string: #98c379;
+    --cm-string-2: #98c379;
+    --cm-meta: #abb2bf;
+    --cm-error: #f44747;
+    --cm-comment: #5c6370;
+    --cm-link: #98c379;
+    --cm-header: #61afef;
+    --cm-quote: #98c379;
+
     /* 字體 */
     --font-family: 'Inter', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
@@ -46,4 +63,21 @@
     --modal-input-bg: #e9ecef;
     --modal-input-color: #343a40;
     --sidebar-bg: #e9ecef;
+
+    /* CodeMirror 語法高亮顏色 - 淺色模式 */
+    --cm-keyword: #d73a49;
+    --cm-atom: #005cc5;
+    --cm-number: #005cc5;
+    --cm-def: #6f42c1;
+    --cm-variable: #e36209;
+    --cm-property: #0056b3;
+    --cm-operator: #d73a49;
+    --cm-string: #032f62;
+    --cm-string-2: #032f62;
+    --cm-meta: #343a40;
+    --cm-error: #f44747;
+    --cm-comment: #6a737d;
+    --cm-link: #218838;
+    --cm-header: #0056b3;
+    --cm-quote: #218838;
 }

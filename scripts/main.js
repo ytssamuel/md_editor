@@ -1,14 +1,24 @@
-import { markdownRenderer } from './markdownRenderer.js';
+import { markdownRenderer, customRenderer } from './markdownRenderer.js';
 import { fileHandler } from './fileHandler.js';
 import { uiManager } from './uiManager.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+    // CodeMirror 編輯器實例
+    const editor = CodeMirror(document.getElementById('editor-container'), {
+        mode: 'gfm', // GitHub Flavored Markdown
+        theme: 'material-darker',
+        lineNumbers: true,
+        lineWrapping: true,
+        autofocus: true,
+    });
+
+    // 初始化 Marked.js，只執行一次
+    window.marked.use({ renderer: customRenderer });
+
     // DOM 元素引用
-    const editor = document.getElementById('editor');
     const preview = document.getElementById('preview');
     const gutter = document.getElementById('gutter');
     const splitContainer = document.getElementById('split-container');
-    const lineNumbers = document.getElementById('lineNumbers');
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const viewButtonsContainer = document.getElementById('view-mode-bar');
     const navList = document.getElementById('nav-list');
@@ -82,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
         markdownRenderer.updateAll(
             editor,
             preview,
-            lineNumbers,
             navList,
             window.marked,
             window.hljs,
@@ -92,12 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const bindEventListeners = () => {
-        editor.addEventListener('input', () => {
+        editor.on('change', () => {
             updateAll();
-        });
-
-        editor.addEventListener('scroll', () => {
-            markdownRenderer.syncScroll(editor, lineNumbers);
         });
         
         // 檔案操作按鈕
@@ -136,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 markdownRenderer.updatePreview(editor, preview, navList, window.marked, window.hljs, window.mermaid, window.ABCJS);
                 markdownRenderer.updateSidebar(navList, preview);
-                editor.dispatchEvent(new Event('scroll'));
+                editor.refresh(); // 重新整理 CodeMirror 編輯器
             }
         });
 
@@ -242,10 +247,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (savedTheme === 'light') {
             document.body.classList.add('light-mode');
             themeToggleBtn.innerHTML = `<i class=\"fas fa-moon\"></i><span id=\"theme-text\">深色模式</span>`;
+            editor.setOption('theme', 'eclipse');
             document.getElementById('hljs-theme').href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/github.min.css";
         } else {
             document.body.classList.remove('light-mode');
             themeToggleBtn.innerHTML = `<i class=\"fas fa-sun\"></i><span id=\"theme-text\">淺色模式</span>`;
+            editor.setOption('theme', 'material-darker');
             document.getElementById('hljs-theme').href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/atom-one-dark.min.css";
         }
 

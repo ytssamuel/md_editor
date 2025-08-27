@@ -3,16 +3,19 @@ export const uiManager = {
         const themeToggleBtn = document.getElementById('theme-toggle-btn');
         const hljsTheme = document.getElementById('hljs-theme');
         const isLightMode = document.body.classList.toggle('light-mode');
+        const editor = document.querySelector('.CodeMirror').CodeMirror;
         
         // 判斷當前是否為淺色模式，並更新 UI 顯示和 localStorage
         if (isLightMode) {
             themeToggleBtn.innerHTML = `<i class=\"fas fa-moon\"></i><span id=\"theme-text\">深色模式</span>`;
             localStorage.setItem('theme', 'light');
             hljsTheme.href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/github.min.css";
+            editor.setOption('theme', 'eclipse');
         } else {
             themeToggleBtn.innerHTML = `<i class=\"fas fa-sun\"></i><span id=\"theme-text\">淺色模式</span>`;
             localStorage.setItem('theme', 'dark');
             hljsTheme.href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/atom-one-dark.min.css";
+            editor.setOption('theme', 'material-darker');
         }
     },
     setViewMode: (mode) => {

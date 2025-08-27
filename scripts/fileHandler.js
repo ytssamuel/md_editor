@@ -2,7 +2,7 @@ import { modalManager } from './modalManager.js';
 
 export const fileHandler = {
     download: async (editor) => {
-        const text = editor.value;
+        const text = editor.getValue();
         if (!text.trim()) {
             await modalManager.show('編輯器內容是空的，無法下載！', false);
             return;
@@ -35,7 +35,7 @@ export const fileHandler = {
             if (file) {
                 const reader = new FileReader();
                 reader.onload = (event) => {
-                    editor.value = event.target.result;
+                    editor.setValue(event.target.result);
                     updateCallback(); // 使用回調函數來更新 UI
                 };
                 reader.readAsText(file);
@@ -43,7 +43,7 @@ export const fileHandler = {
         };
     },
     exportPDF: async (editor) => {
-        if (!editor.value.trim()) {
+        if (!editor.getValue().trim()) {
             await modalManager.show('編輯器內容是空的，無法產生 PDF！', false);
             return;
         }
@@ -83,7 +83,7 @@ export const fileHandler = {
         // 修正：使用您提供的 modalManager 參數
         const result = await modalManager.show('確定要清除所有內容嗎？', true, false);
         if (result.confirmed) {
-            editor.value = '';
+            editor.setValue('');
             updateCallback();
         }
     },
@@ -93,8 +93,10 @@ export const fileHandler = {
             if (!response.ok) {
                 throw new Error(`無法載入 demo.md 檔案 (HTTP 狀態碼: ${response.status})`);
             }
-            const demoContent = await response.text();
-            editor.value = demoContent;
+            let demoContent = await response.text();
+            // 新增：在設定內容前，將所有單反斜線替換為雙反斜線，以避免轉義問題
+            demoContent = demoContent.replace(/\\/g, '\\');
+            editor.setValue(demoContent);
             updateCallback();
         } catch (error) {
             console.error("載入範例內容失敗:", error);
