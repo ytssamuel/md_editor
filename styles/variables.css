@@ -24,6 +24,7 @@
     --h3-color: var(--highlight-color);
 
     /* CodeMirror 語法高亮顏色 - 深色模式 */
+    --cm-activeline-bg: #224ca1;
     --cm-keyword: #c678dd;
     --cm-atom: #d19a66;
     --cm-number: #d19a66;
@@ -65,6 +66,7 @@
     --sidebar-bg: #e9ecef;
 
     /* CodeMirror 語法高亮顏色 - 淺色模式 */
+    --cm-activeline-bg: #b596bc;
     --cm-keyword: #d73a49;
     --cm-atom: #005cc5;
     --cm-number: #005cc5;

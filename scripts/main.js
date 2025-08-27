@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         lineNumbers: true,
         lineWrapping: true,
         autofocus: true,
+        styleActiveLine: true,
     });
 
     // 初始化 Marked.js，只執行一次
@@ -94,6 +95,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const bindEventListeners = () => {
         editor.on('change', () => {
             updateAll();
+        });
+
+        editor.on('scroll', () => {
+            const scrollInfo = editor.getScrollInfo();
+            // 避免在沒有滾動條時計算，導致 NaN
+            if (scrollInfo.height <= scrollInfo.clientHeight) {
+                return;
+            }
+            const ratio = scrollInfo.top / (scrollInfo.height - scrollInfo.clientHeight);
+            preview.scrollTop = ratio * (preview.scrollHeight - preview.clientHeight);
         });
         
         // 檔案操作按鈕

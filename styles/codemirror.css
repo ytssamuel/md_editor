@@ -18,6 +18,11 @@
     color: var(--line-number-color) !important;
 }
 
+/* 新增：目前行高亮 */
+.CodeMirror-activeline-background {
+    background-color: var(--cm-activeline-bg) !important;
+}
+
 /* CodeMirror 主題與語法高亮覆寫 */
 .cm-s-material-darker.CodeMirror, .cm-s-eclipse.CodeMirror {
     background-color: var(--panel-bg);
