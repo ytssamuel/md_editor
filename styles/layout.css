@@ -154,9 +154,14 @@ header {
     line-height: 1.5;
     user-select: none;
     flex-shrink: 0;
-    transition: background 0.3s ease;
+    transition: background 0.3s ease, color 0.3s ease;
     width: 50px;
     overflow-y: hidden;
+}
+
+/* 淺色模式下的行號顏色 */
+.light-mode .line-numbers {
+    color: #adb5bd; /* 淺色模式下的行號顏色 */
 }
 
 #editor {

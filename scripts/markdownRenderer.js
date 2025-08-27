@@ -186,7 +186,9 @@ export const markdownRenderer = {
             const text = heading.textContent;
             const id = heading.id;
             const listItem = document.createElement('li');
-            listItem.innerHTML = `<a href="#${id}">${text}</a>`;
+            const isLightMode = document.body.classList.contains('light-mode');
+            const textColor = isLightMode ? '#343a40' : '#abb2bf'; // 根據主題設定文字顏色
+            listItem.innerHTML = `<a href="#${id}" style="color: ${textColor};">${text}</a>`; // 內聯樣式
             listItem.style.paddingLeft = `${(level - 1) * 15}px`;
             navList.appendChild(listItem);
         });
