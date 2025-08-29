@@ -25,3 +25,7 @@ pnpm-debug.log*
 # OS and temporary files
 .DS_Store
 Thumbs.db
+
+# npm package files
+package.json
+package-lock.json
