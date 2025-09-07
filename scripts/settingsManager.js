@@ -48,7 +48,24 @@ export const settingsManager = {
             settingsModal.style.display = 'flex';
         });
 
-        document.getElementById('save-settings').addEventListener('click', () => {
+        // 套用 (不關閉)
+        const applyBtn = document.getElementById('apply-settings');
+        if (applyBtn) {
+            applyBtn.addEventListener('click', () => {
+                const h1ColorKey = document.getElementById('h1-color').value;
+                const h2ColorKey = document.getElementById('h2-color').value;
+                const h3ColorKey = document.getElementById('h3-color').value;
+                localStorage.setItem('h1ColorKey', h1ColorKey);
+                localStorage.setItem('h2ColorKey', h2ColorKey);
+                localStorage.setItem('h3ColorKey', h3ColorKey);
+                applyHeadingColors();
+                updateCallback();
+            });
+        }
+
+        // 儲存並關閉
+        const saveBtn = document.getElementById('save-settings');
+        saveBtn.addEventListener('click', () => {
             const h1ColorKey = document.getElementById('h1-color').value;
             const h2ColorKey = document.getElementById('h2-color').value;
             const h3ColorKey = document.getElementById('h3-color').value;
@@ -62,24 +79,17 @@ export const settingsManager = {
             settingsModal.style.display = 'none';
         });
 
-        document.getElementById('reset-settings').addEventListener('click', () => {
+        // 還原預設 (不關閉)
+        const resetBtn = document.getElementById('reset-settings');
+        resetBtn.addEventListener('click', () => {
             localStorage.removeItem('h1ColorKey');
             localStorage.removeItem('h2ColorKey');
             localStorage.removeItem('h3ColorKey');
-
             loadSettings();
             updateCallback();
-            settingsModal.style.display = 'none';
         });
 
         loadSettings();
     },
     applyHeadingColors
 };
-//             closeModal();
-//         });
-
-//         loadSettings();
-//     },
-//     applyHeadingColors
-// };
