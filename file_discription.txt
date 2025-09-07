@@ -9,11 +9,14 @@
 │   ├── layout.css    // 佈局樣式，控制頁面整體佈局
 │   └── markdown.css  // Markdown 渲染區塊的樣式
 ├── scripts/
-│   ├── main.js         // 核心程式碼，負責初始化、事件綁定和模組導入
-│   ├── uiManager.js    // UI 管理模組，處理主題切換和檢視模式
-│   ├── fileHandler.js  // 檔案處理模組，處理檔案上傳、下載和清除
-│   ├── markdownRenderer.js// Markdown 渲染模組，處理 Markdown 轉換和程式碼高亮
-│   └── modalManager.js // 模態框管理模組，處理自定義模態框的顯示和操作
+│   ├── main.js         // 核心程式碼：初始化、事件綁定、DOM 快取、效能優化 (debounce / rAF 捲動同步 / Mermaid 主題差異初始化)
+│   ├── uiManager.js    // UI 管理：主題切換、檢視模式、標頭收合
+│   ├── fileHandler.js  // 檔案處理：上傳(含重新選同檔支持)、下載、清除、PDF 匯出
+│   ├── markdownRenderer.js// Markdown 渲染：解析、語法高亮、Mermaid/ABC/MathJax、側邊大綱
+│   ├── settingsManager.js // 標題色彩設定：套用 / 儲存並關閉 / 還原 (即時預覽不關閉)
+│   ├── modalManager.js // 模態框：Promise 介面、ESC 關閉、focus trap、Tab 循環、還原焦點
+│   ├── logger.js       // 日誌抽象：統一 debug/info/warn/error 輸出，可日後接遠端
+│   └── config.js       // （若使用）集中靜態設定 / 常數（目前顏色映射保留在 settingsManager 內，可逐步遷移）
 ├── demo.md             // 示範用的 Markdown 檔案
 └── README.md           // 專案說明文件
 
@@ -34,12 +37,17 @@
   - markdown.css 定義了 Markdown 渲染區塊的樣式，例如預覽區。
 
 - scripts/：
-  - 包含所有 JavaScript 腳本，用於處理頁面的互動和邏輯。
-  - main.js 是核心腳本，負責初始化應用程式、綁定事件和導入其他模組。
+  - main.js 是核心腳本，負責初始化應用程式、綁定事件和導入其他模組，並新增：
+    * DOM 元素集中快取減少重複 query
+    * 內容變更使用 debounce 以降低渲染次數
+    * Editor 捲動同步使用 requestAnimationFrame 節流
+    * Mermaid 僅在主題變更時重新初始化
   - uiManager.js 處理 UI 相關的功能，例如主題切換和檢視模式。
-  - fileHandler.js 處理檔案操作，例如上傳、下載和清除。
-  - markdownRenderer.js 處理 Markdown 渲染和程式碼高亮。
-  - modalManager.js 處理自定義模態框的顯示和操作。
+  - fileHandler.js 增強：移除無效字串 replace、上傳後清空 input.value 允許同檔重傳、錯誤集中 logger。
+  - markdownRenderer.js 現採用集中 logger，Console 改為 logger；加入基本 JSDoc。
+  - settingsManager.js 新增「套用」按鈕（不關閉 Modal），重設不關閉以利即時比較。
+  - modalManager.js 增強：ESC 關閉、focus trap、Tab 循環、還原先前焦點，提高可及性 (a11y)。
+  - logger.js 新增：集中日誌層，可用 localStorage.setItem('log:level','debug') 控制輸出。
 
 - 函式庫：
   - marked.js：用於將 Markdown 轉換為 HTML。
@@ -50,10 +58,10 @@
 
 - 流程：
   1.  使用者在編輯器中輸入 Markdown 內容。
-  2.  main.js 監聽 editor 的 'input' 事件。
-  3.  事件觸發時，main.js 呼叫 markdownRenderer.updateAll()。
-  4.  markdownRenderer.updateAll() 呼叫 marked.parse() 將 Markdown 轉換為 HTML。
-  5.  markdownRenderer.updateAll() 更新預覽區的 innerHTML。
-  6.  markdownRenderer.updateAll() 呼叫 highlight.js、mermaid.js、abcjs 和 MathJax 渲染相應的內容。
-  7.  markdownRenderer.updateAll() 呼叫 updateSidebar() 更新文件大綱。
-  8.  main.js 監聽 editor 的 'scroll' 事件，同步編輯器和行號的捲動。
+  2.  change 事件觸發後經 debounce (300ms 預設) 才進行渲染，避免高頻輸入造成卡頓。
+  3.  main.js 呼叫 updateAll()（內部確保 Mermaid 僅在主題變更時初始化）。
+  4.  markdownRenderer.updatePreview() 呼叫 marked.parse() 產生 HTML。
+  5.  預覽區 innerHTML 更新後觸發 highlight / Mermaid / ABC / MathJax。
+  6.  更新側邊大綱。
+  7.  Editor scroll → rAF 節流的同步程式更新預覽捲動位置。
+  8.  日誌透過 logger.js 輸出（可調整層級）。

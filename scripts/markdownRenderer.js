@@ -1,6 +1,7 @@
 // 注意：這個檔案不再直接使用 marked、hljs、mermaid、abcjs
 // 這些函式庫將從外部傳入
 import { modalManager } from './modalManager.js';
+import { logger } from './logger.js';
 
 /**
  * 自訂 Marked.js Renderer，用來處理特殊 Markdown 語法。
@@ -51,22 +52,21 @@ export const markdownRenderer = {
      * @param {object} ABCJS ABCJS 函式庫。
      */
     updatePreview: (editor, preview, navList, marked, hljs, mermaid, ABCJS) => {
-        console.log('--- 開始渲染預覽 ---');
-        
-        const markdownText = editor.getValue();
-        const htmlContent = marked.parse(markdownText);
-        preview.innerHTML = htmlContent;
-        console.log('Markdown 已轉換為 HTML 並插入 DOM。');
-
-        // 呼叫獨立的渲染函式
-        markdownRenderer.highlightCodeBlocks(preview, hljs);
-        markdownRenderer.renderMermaidCharts(mermaid);
-        markdownRenderer.renderAbcBlocks(preview, ABCJS);
-        markdownRenderer.renderMathFormulas(preview);
-        
-        // 更新文件大綱
-        markdownRenderer.updateSidebar(navList, preview);
-        console.log('--- 預覽渲染結束 ---');
+        try {
+            logger.debug('開始渲染預覽');
+            const markdownText = editor.getValue();
+            const htmlContent = marked.parse(markdownText);
+            preview.innerHTML = htmlContent;
+            // 呼叫獨立的渲染函式
+            markdownRenderer.highlightCodeBlocks(preview, hljs);
+            markdownRenderer.renderMermaidCharts(mermaid);
+            markdownRenderer.renderAbcBlocks(preview, ABCJS);
+            markdownRenderer.renderMathFormulas(preview);
+            
+            // 更新文件大綱
+            markdownRenderer.updateSidebar(navList, preview);
+            logger.debug('預覽渲染完成');
+        } catch (e) { logger.error('預覽渲染流程失敗', e); }
     },
 
     /**
@@ -83,10 +83,7 @@ export const markdownRenderer = {
                      hljs.highlightElement(block);
                 }
             });
-            console.log('程式碼高亮渲染完成。');
-        } catch (error) {
-            console.error('程式碼高亮渲染失敗:', error);
-        }
+        } catch (error) { logger.error('程式碼高亮失敗', error); }
     },
 
     /**
@@ -94,14 +91,7 @@ export const markdownRenderer = {
      * @param {object} mermaid Mermaid.js 函式庫。
      */
     renderMermaidCharts: (mermaid) => {
-        try {
-            mermaid.init();
-            console.log('Mermaid 圖表渲染完成。');
-        } catch (error) {
-            console.error('Mermaid 圖表渲染失敗:', error);
-            modalManager.show(`Mermaid 圖表渲染失敗：\n${error.message}`, false);
-        }
-    },
+        try { mermaid.init(); } catch (error) { logger.error('Mermaid 渲染失敗', error); modalManager.show(`Mermaid 圖表渲染失敗：\n${error.message}`, false);} },
 
     /**
      * 渲染 ABC 樂譜。
@@ -111,49 +101,22 @@ export const markdownRenderer = {
     renderAbcBlocks: (container, ABCJS) => {
         try {
             const abcCodeBlocks = container.querySelectorAll('pre code.language-abc');
-            console.log(`找到 ${abcCodeBlocks.length} 個 ABC 樂譜區塊。`);
-
             abcCodeBlocks.forEach(block => {
                 const pre = block.parentElement;
                 const newDiv = document.createElement('div');
                 newDiv.className = 'abc-notation';
                 pre.parentNode.replaceChild(newDiv, pre);
                 
-                try {
-                    ABCJS.renderAbc(newDiv, block.textContent, {
-                        staffwidth: 600,
-                        responsive: "resize"
-                    });
-                } catch (e) {
-                    const errorDiv = document.createElement('div');
-                    errorDiv.className = 'abc-error';
-                    errorDiv.innerHTML = `<p><strong>樂譜渲染失敗</strong></p><p>請檢查樂譜語法是否正確。<br><code>${e.message}</code></p>`;
-                    newDiv.innerHTML = '';
-                    newDiv.appendChild(errorDiv);
-                    console.error('ABCJS 渲染失敗:', e);
-                    modalManager.show(`ABC 樂譜渲染失敗：\n${e.message}`, false);
-                }
-            });
-            console.log('ABC 樂譜渲染完成。');
-        } catch (error) {
-            console.error('ABC 樂譜渲染失敗:', error);
-        }
+                try { ABCJS.renderAbc(newDiv, block.textContent, { staffwidth: 600, responsive: 'resize' }); }
+                catch (e) { const errorDiv = document.createElement('div'); errorDiv.className = 'abc-error'; errorDiv.innerHTML = `<p><strong>樂譜渲染失敗</strong></p><p>${e.message}</p>`; newDiv.innerHTML=''; newDiv.appendChild(errorDiv); logger.error('ABCJS 渲染失敗', e); modalManager.show(`ABC 樂譜渲染失敗：\n${e.message}`, false);} });
+        } catch (error) { logger.error('ABC 樂譜處理流程失敗', error); }
     },
 
     /**
      * 渲染 MathJax 公式。
      * @param {HTMLElement} container 要搜尋公式的容器。
      */
-    renderMathFormulas: (container) => {
-        try {
-            if (typeof MathJax !== 'undefined') {
-                MathJax.typesetPromise([container]);
-                console.log('MathJax 公式渲染完成。');
-            }
-        } catch (error) {
-            console.error('MathJax 公式渲染失敗:', error);
-        }
-    },
+    renderMathFormulas: (container) => { try { if (typeof MathJax !== 'undefined') MathJax.typesetPromise([container]); } catch (error) { logger.error('MathJax 渲染失敗', error);} },
 
     // ------------------------------------------------------------------
     // 以下為非渲染相關的輔助函式，保持不變
@@ -161,15 +124,15 @@ export const markdownRenderer = {
     
     updateSidebar: (navList, preview) => {
         const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
-        navList.innerHTML = '';
+        navList.innerHTML='';
         headings.forEach(heading => {
             const level = parseInt(heading.tagName[1]);
             const text = heading.textContent;
             const id = heading.id;
             const listItem = document.createElement('li');
             const isLightMode = document.body.classList.contains('light-mode');
-            const textColor = isLightMode ? '#343a40' : '#abb2bf'; // 根據主題設定文字顏色
-            listItem.innerHTML = `<a href="#${id}" style="color: ${textColor};">${text}</a>`; // 內聯樣式
+            const textColor = isLightMode ? '#343a40' : '#abb2bf';
+            listItem.innerHTML = `<a href="#${id}" style="color: ${textColor};">${text}</a>`;
             listItem.style.paddingLeft = `${(level - 1) * 15}px`;
             navList.appendChild(listItem);
         });

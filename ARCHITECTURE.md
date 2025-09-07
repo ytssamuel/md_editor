@@ -2,6 +2,14 @@
 
 本文件旨在說明 Markdown 編輯器的整體架構、資料流程以及 CSS/JavaScript 的模組化設計。
 
+> 更新紀錄（最近變更摘要）
+> - 新增 logger.js 集中日誌層（可用 localStorage 設定 log:level）。
+> - main.js 導入 debounce、rAF 滾動同步、Mermaid 主題差異初始化、DOM 快取。
+> - modalManager.js 加入 ESC 關閉、focus trap、Tab 循環、焦點還原。
+> - settingsModal 新增「套用」按鈕；重設保持開啟即時預覽。
+> - fileHandler 上傳邏輯允許同檔再次選擇並整合錯誤日誌。
+> - markdownRenderer 改用集中 logger，後續便於差異渲染擴充。
+
 ## 1. 整體架構圖
 
 此圖展示了專案的核心組成部分以及它們之間的依賴關係。
@@ -23,6 +31,7 @@ graph TD
         F[settingsManager.js]
         G[modalManager.js]
         H[config.js]
+        J[logger.js]
     end
 
     subgraph "External Libraries"
@@ -39,6 +48,8 @@ graph TD
     B --> D
     B --> E
     B --> F
+    B --> G
+    B --> J
     D --> G
     F --> H
 
@@ -73,12 +84,14 @@ sequenceDiagram
 
     User->>Editor: 輸入 Markdown 文字
     Editor->>Main: 觸發 'change' 事件
-    Main->>Main: 呼叫 updateAll()
+    Main->>Main: (debounce 300ms) updateAll()
     Main->>Renderer: 呼叫 updatePreview()
     Renderer->>Editor: 取得 Markdown 全文
     Renderer->>Preview: 將解析後的 HTML 設為 innerHTML
     Renderer->>Preview: 呼叫 highlight.js, Mermaid, MathJax 等進行渲染
+    Renderer->>Preview: Mermaid / ABC / MathJax (僅必要時初始化 Mermaid)
     Renderer->>Preview: 更新文件大綱
+    Main->>Preview: rAF 同步捲動位置
 ```
 
 **說明**：
@@ -153,6 +166,7 @@ graph TD
         Settings[settingsManager.js]
         Renderer[markdownRenderer.js]
         Modal[modalManager.js]
+        Logger[logger.js]
     end
 
     Main -- "初始化與協調" --> UI
@@ -162,6 +176,7 @@ graph TD
 
     Settings -- "讀取" --> Config
     File -- "呼叫" --> Modal
+    Main -- "日誌" --> Logger
 ```
 
 **說明**：
@@ -173,3 +188,27 @@ graph TD
 -   **`settingsManager.js`**：設定管理器。職責：處理設定面板的所有邏輯，包括儲存、讀取和應用設定。
 -   **`markdownRenderer.js`**：渲染器。職責：協調 `marked.js` 和其他函式庫，將 Markdown 文本轉換為最終的預覽內容。
 -   **`modalManager.js`**：模態框管理器。職責：提供一個統一的 API 來顯示各類型的對話框。
+-   **`logger.js`**：集中化日誌，替代散落 console，支援層級控制。
+
+**新增 / 調整說明**：
+- logger.js：集中化日誌，替代散落 console，支援層級控制。
+- main.js：加入 DOM 快取、debounce、rAF 同步、Mermaid 差異初始化。
+- modalManager.js：強化可及性（ESC、焦點循環、焦點還原）。
+- settingsManager.js：支持「套用」不關閉、reset 不關閉更易比對顏色結果。
+
+---
+
+## 5. 可及性 (a11y) 強化摘要
+- Modal：focus trap、ESC 退出、開關保留焦點位置。
+- 後續建議：按鈕 aria-label、role="dialog"、主題切換加上 aria-pressed。
+
+## 6. 日誌策略
+- 預設層級 info；localStorage.setItem('log:level','debug') 開啟詳細。
+- 可掛鉤 window.onerror / unhandledrejection 統一上報（未實作，可待擴充）。
+
+## 7. 後續建議 (Roadmap)
+- Heading 重複 ID 自動去重 (#title, #title-2 ...)。
+- 差異渲染 / 虛擬化預覽以支援大型文件。
+- 匯出 PDF 客製化分頁控制 (page-break-before: h1)。
+- Service Worker / PWA 離線支援 + 本地版本歷史 (IndexedDB)。
+- 插件化渲染管線：允許自訂語法前/後處理。
